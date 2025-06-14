@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ultimate Calculator</title>
+  <style>
+    :root {
+      --bg-color: #1e1e2f;
+      --btn-color: #2f2f4f;
+      --btn-hover: #4f4f6f;
+      --accent: #00ffe7;
+      --text-color: #ffffff;
+      --highlight: #ff4081;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    .heading {
+      font-size: 1.8rem;
+      margin-bottom: 20px;
+      background: linear-gradient(to right, var(--accent), var(--highlight));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      font-weight: bold;
+      text-align: center;
+      animation: fadeIn 2s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .calculator {
+      background: #282c34;
+      border-radius: 20px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+      padding: 20px;
+      width: 340px;
+      transition: all 0.3s ease;
+    }
+
+    .display {
+      background: #1c1c2b;
+      padding: 20px;
+      border-radius: 15px;
+      font-size: 2.2rem;
+      text-align: right;
+      color: var(--accent);
+      overflow-x: auto;
+    }
+
+    .buttons {
+      margin-top: 20px;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 15px;
+    }
+
+    button {
+      padding: 20px;
+      font-size: 1.2rem;
+      border: none;
+      border-radius: 15px;
+      background-color: var(--btn-color);
+      color: var(--text-color);
+      cursor: pointer;
+      transition: background-color 0.2s ease, transform 0.1s ease;
+    }
+
+    button:hover {
+      background-color: var(--btn-hover);
+      transform: scale(1.05);
+    }
+
+    button.operator {
+      color: var(--accent);
+    }
+
+    button.equal {
+      background-color: var(--accent);
+      color: #000;
+      grid-column: span 2;
+    }
+
+    button.clear {
+      grid-column: span 2;
+      background-color: crimson;
+    }
+  </style>
+</head>
+<body>
+  <div class="heading">Calculator Program by <span style="color: var(--highlight);">AK</span></div>
+  <div class="calculator">
+    <div class="display" id="display">0</div>
+    <div class="buttons">
+      <button class="clear" onclick="clearDisplay()">C</button>
+      <button onclick="appendInput('(')">(</button>
+      <button onclick="appendInput(')')">)</button>
+      <button class="operator" onclick="appendInput('/')">÷</button>
+
+      <button onclick="appendInput('7')">7</button>
+      <button onclick="appendInput('8')">8</button>
+      <button onclick="appendInput('9')">9</button>
+      <button class="operator" onclick="appendInput('*')">×</button>
+
+      <button onclick="appendInput('4')">4</button>
+      <button onclick="appendInput('5')">5</button>
+      <button onclick="appendInput('6')">6</button>
+      <button class="operator" onclick="appendInput('-')">−</button>
+
+      <button onclick="appendInput('1')">1</button>
+      <button onclick="appendInput('2')">2</button>
+      <button onclick="appendInput('3')">3</button>
+      <button class="operator" onclick="appendInput('+')">+</button>
+
+      <button onclick="appendInput('0')">0</button>
+      <button onclick="appendInput('.')">.</button>
+      <button class="equal" onclick="calculate()">=</button>
+    </div>
+  </div>
+
+  <script>
+    const display = document.getElementById('display');
+    let expression = '';
+
+    function appendInput(val) {
+      if (expression === '0' && val !== '.') {
+        expression = val;
+      } else {
+        expression += val;
+      }
+      display.innerText = expression;
+    }
+
+    function clearDisplay() {
+      expression = '';
+      display.innerText = '0';
+    }
+
+    function calculate() {
+      try {
+        const result = eval(expression);
+        display.innerText = result;
+        expression = result.toString();
+      } catch {
+        display.innerText = 'Error';
+        expression = '';
+      }
+    }
+
+    document.addEventListener('keydown', (e) => {
+      if ((e.key >= '0' && e.key <= '9') || ['+', '-', '*', '/', '.', '(', ')'].includes(e.key)) {
+        appendInput(e.key);
+      } else if (e.key === 'Enter') {
+        calculate();
+      } else if (e.key === 'Backspace') {
+        expression = expression.slice(0, -1);
+        display.innerText = expression || '0';
+      } else if (e.key.toLowerCase() === 'c') {
+        clearDisplay();
+      }
+    });
+  </script>
+</body>
+</html>
